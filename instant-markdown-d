@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 let port = process.env.INSTANT_MARKDOWN_PORT || 8090;
+let browser = process.env.INSTANT_MARKDOWN_BROWSER;
 
 var MarkdownIt = require('markdown-it');
 var hljs = require('highlight.js');
@@ -143,8 +144,9 @@ io.sockets.on('connection', function(sock){
 
 
 function onListening() {
-  if (os.platform() === 'win32') {
-    exec('start /b http://localhost:8090', function(error, stdout, stderr){});
+  if (browser !== undefined) {
+    exec(browser+' http://localhost:'+port, function(error, stdout, stderr){});
+  } else if (os.platform() === 'win32') {
     exec('start /b http://localhost:'+port, function(error, stdout, stderr){});
   } else if (os.platform() === 'darwin') {
     exec('open -g http://localhost:'+port, function(error, stdout, stderr){});
